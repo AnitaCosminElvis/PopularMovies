@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+<string-array name="moviePreference">
+    <item name="top">@string/top_rated</item>
+    <item name="popular">@string/most_popular</item>
+</string-array>
+
+<string-array name="moviePreferenceValues">
+    <item name="top">0</item>
+    <item name="popular">1</item>
+</string-array>
+
+</resources>
