@@ -1,8 +1,5 @@
 package com.example.android.popularmovies.data;
 
-/**
- * Created by home on 2/7/2017.
- */
 
 public class MovieDbData {
     long    mMovieId;

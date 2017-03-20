@@ -12,10 +12,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Map;
 
-/**
- * Created by home on 2/6/2017.
- */
-
 
 public class GridRecyclerViewAdapter extends RecyclerView.Adapter<GridRecyclerViewAdapter.ViewHolder> {
 

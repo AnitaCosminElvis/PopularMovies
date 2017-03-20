@@ -35,9 +35,6 @@ public final class HttpRequestManager extends AsyncTask<Void, Void, JSONArray> {
     private static final String     BASE_TOP_MOVIES_URL = "https://api.themoviedb.org/3/movie/top_rated?api_key=";
     private static final String     API_KEY = "dummyApiKey";
 
-//    https://api.themoviedb.org/3/movie/popular?api_key=85927cfcf1ec6f9e782b08839bca3248
-//    https://api.themoviedb.org/3/movie/top_rated?api_key=85927cfcf1ec6f9e782b08839bca3248
-
     MainActivity.ESortPreference    mSortPreference;
     PrefferedDataLoadedListener     mListener;
 
