@@ -18,7 +18,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.android.popularmovies.data.MovieDbData;
+import com.example.android.popularmovies.data.MovieDbObject;
 import com.example.android.popularmovies.utils.HttpRequestManager;
 import com.example.android.popularmovies.utils.TheMovieDBDataResponseManager;
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
     RecyclerView                    mRecyclerView;
     GridRecyclerViewAdapter         mGridAdapter;
     HttpRequestManager              mHttpRequestManager;
-    Map<Long,MovieDbData>           mMovieDetailsByIdMap;
+    Map<Long,MovieDbObject>           mMovieDetailsByIdMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mMovieDetailsByIdMap = new HashMap<Long,MovieDbData>();
+        mMovieDetailsByIdMap = new HashMap<Long,MovieDbObject>();
 
         if (savedInstanceState == null) {
             mSharedPrefs.edit().putInt(SORT_MOVIE_PREFERENCE,0);
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(this, MovieDetailsActivity.class);
         long movieId = mGridAdapter.getMovieId(position);
-        MovieDbData movieData = mMovieDetailsByIdMap.get(movieId);
+        MovieDbObject movieData = mMovieDetailsByIdMap.get(movieId);
         String uriString = movieData.getmUriImageString();
         String plotString = movieData.getmPlot();
         String titleString = movieData.getmTitle();
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
                     continue;
                 }
 
-                MovieDbData movieData = new MovieDbData();
+                MovieDbObject movieData = new MovieDbObject();
                 movieData.setmMovieId(id);
                 movieData.setmPlot(plotString);
                 movieData.setmReleaseDate(releaseDate);
