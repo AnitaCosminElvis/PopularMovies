@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.popularmovies.data.MovieDbObject;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -18,12 +19,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private static final String BASE_IMAGE_URL_184 = "https://image.tmdb.org/t/p/w184";
 
-    TextView    mTitle;
-    TextView    mPlot;
-    TextView    mRating;
-    TextView    mReleaseDate;
-    ImageView   mMoviePoster;
-    long        mMovieId;
+    TextView        mTitle;
+    TextView        mPlot;
+    TextView        mRating;
+    TextView        mReleaseDate;
+    ImageView       mMoviePoster;
+    MovieDbObject   mMovieDbObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,28 +40,22 @@ public class MovieDetailsActivity extends AppCompatActivity {
         mMoviePoster = (ImageView) findViewById(R.id.iv_movie_poster);
 
         Intent intent = getIntent();
+        mMovieDbObject = intent.getParcelableExtra(MainActivity.MOVIE_DB_OBJECT);
 
-        mMovieId = intent.getLongExtra(MainActivity.MOVIE_DETAILS_ID,0);
-        String uriString = intent.getStringExtra(MainActivity.MOVIE_DETAILS_URI);
-        String plotString = intent.getStringExtra(MainActivity.MOVIE_DETAILS_PLOT);
-        String titleString = intent.getStringExtra(MainActivity.MOVIE_DETAILS_TITLE);
-        double userRating = intent.getDoubleExtra(MainActivity.MOVIE_DETAILS_RATING,0);
-        String releaseDate = intent.getStringExtra(MainActivity.MOVIE_DETAILS_DATE);
-
-        Uri uri = Uri.parse(BASE_IMAGE_URL_184 + uriString);
+        Uri uri = Uri.parse(BASE_IMAGE_URL_184 + mMovieDbObject.getmUriImageString());
         Context context = this.getApplicationContext();
 
+        mTitle.setText(mMovieDbObject.getmTitle());
+        mPlot.setText(mMovieDbObject.getmPlot());
 
-        mTitle.setText(titleString);
-        mPlot.setText(plotString);
-
-        String strRatingFormat = String.format(getResources().getString(R.string.rating), String.valueOf(userRating));
+        String strRatingFormat = String.format(getResources().getString(R.string.rating),
+                String.valueOf(mMovieDbObject.getmUserRating()));
         mRating.setText(String.valueOf(strRatingFormat));
 
-        String strRelDateFormat = String.format(getResources().getString(R.string.releaseDate), releaseDate);
+        String strRelDateFormat = String.format(getResources().getString(R.string.releaseDate),
+                mMovieDbObject.getmReleaseDate());
         mReleaseDate.setText(strRelDateFormat);
 
         Picasso.with(context).load(uri).into(mMoviePoster);
-
     }
 }

@@ -24,9 +24,7 @@ import com.example.android.popularmovies.PrefferedDataLoadedListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- * These utilities will be used to communicate with the weather servers.
- */
+
 public final class HttpRequestManager extends AsyncTask<Void, Void, JSONArray> {
 
     private static final String     TAG = HttpRequestManager.class.getSimpleName();

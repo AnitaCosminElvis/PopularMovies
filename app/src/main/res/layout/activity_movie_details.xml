@@ -6,89 +6,113 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.popularmovies.MovieDetailsActivity">
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:id="@+id/tv_movie_title"
-            android:layout_alignParentTop="true"
-            android:textSize="@dimen/title_size"
-            android:background="@color/cardview_dark_background"
-            android:gravity="center"
-            android:layout_height="@dimen/movie_title_vertical_margin"/>
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_below="@+id/tv_movie_title"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_height="@dimen/body_height"
-            android:background="@color/cardview_shadow_start_color"
-            android:paddingRight="@dimen/padding_size"
-            android:paddingLeft="@dimen/padding_size"
-            android:paddingTop="@dimen/padding_size"
-            android:paddingBottom="@dimen/zero_size">
-
-            <ImageView
-                android:id="@+id/iv_movie_poster"
-                android:layout_width="@dimen/image_width"
-                android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:background="@color/cardview_shadow_start_color"/>
-
-            <LinearLayout
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_gravity="bottom|right"
-                android:layout_toEndOf="@id/iv_movie_poster"
-                android:layout_toRightOf="@id/iv_movie_poster"
-                android:layout_width="match_parent"
-                android:weightSum="1"
-                android:background="@color/cardview_shadow_start_color">
-
-                <TextView
-                    android:id="@+id/tv_rating"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:layout_weight="0.5"
-                    android:textSize="@dimen/text_size"
-                    android:textAlignment="center"/>
-
-                <TextView
-                    android:id="@+id/tv_release_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:textAlignment="center"
-                    android:textSize="@dimen/text_size"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/linearLayout3"
             android:layout_height="match_parent"
-            android:background="@color/cardview_shadow_start_color"
-            android:padding="@dimen/padding_size">
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_plot"
+                android:layout_width="match_parent"
+                android:id="@+id/tv_movie_title"
+                android:layout_alignParentTop="true"
+                android:textSize="@dimen/title_size"
+                android:background="@color/cardview_dark_background"
+                android:gravity="center"
+                android:layout_height="@dimen/movie_title_vertical_margin"/>
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_below="@+id/tv_movie_title"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_height="@dimen/body_height"
+                android:background="@color/cardview_shadow_start_color"
+                android:paddingRight="@dimen/padding_size"
+                android:paddingLeft="@dimen/padding_size"
+                android:paddingTop="@dimen/padding_size"
+                android:paddingBottom="@dimen/zero_size">
+
+                <ImageView
+                    android:id="@+id/iv_movie_poster"
+                    android:layout_width="@dimen/image_width"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:background="@color/cardview_shadow_start_color"/>
+
+                <LinearLayout
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_gravity="bottom|right"
+                    android:layout_toEndOf="@id/iv_movie_poster"
+                    android:layout_toRightOf="@id/iv_movie_poster"
+                    android:layout_width="match_parent"
+                    android:weightSum="1"
+                    android:background="@color/cardview_shadow_start_color">
+
+                    <TextView
+                        android:id="@+id/tv_rating"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|bottom"
+                        android:layout_weight="0.5"
+                        android:textSize="@dimen/text_size"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:id="@+id/tv_release_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/text_size"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/linearLayout3"
+                android:layout_height="match_parent"
+                android:background="@color/cardview_shadow_start_color"
+                android:padding="@dimen/padding_size">
+
+                <TextView
+                    android:id="@+id/tv_plot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size"
+                    android:background="@color/cardview_shadow_start_color"
+                    android:layout_alignParentBottom="false"
+                    android:layout_gravity="fill" />
+            </ScrollView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#000000" >
+            </View>
+            <TextView
+                android:id="@+id/tv_trailers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size"
+                android:text="@string/trailers"
                 android:background="@color/cardview_shadow_start_color"
                 android:layout_alignParentBottom="false"
                 android:layout_gravity="fill" />
-        </ScrollView>
-    </LinearLayout>
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lv_trailers"
+                android:orientation="vertical">
+            </ListView>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

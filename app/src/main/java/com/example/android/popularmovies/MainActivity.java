@@ -38,12 +38,12 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
     }
 
     public static final String      SORT_MOVIE_PREFERENCE   = "SortMoviePreference";
-    public static final String      MOVIE_DETAILS_ID        = "ID";
-    public static final String      MOVIE_DETAILS_URI       = "URI";
-    public static final String      MOVIE_DETAILS_PLOT      = "PLOT";
-    public static final String      MOVIE_DETAILS_TITLE     = "TITLE";
-    public static final String      MOVIE_DETAILS_RATING    = "RATE";
-    public static final String      MOVIE_DETAILS_DATE      = "DATE";
+    public static final String      MOVIE_DB_OBJECT         = "MOVIE_DB_OBJECT";
+//    public static final String      MOVIE_DETAILS_URI       = "URI";
+//    public static final String      MOVIE_DETAILS_PLOT      = "PLOT";
+//    public static final String      MOVIE_DETAILS_TITLE     = "TITLE";
+//    public static final String      MOVIE_DETAILS_RATING    = "RATE";
+//    public static final String      MOVIE_DETAILS_DATE      = "DATE";
 
     ProgressBar                     mProgressBar;
     SharedPreferences               mSharedPrefs;
@@ -118,12 +118,7 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
         double userRating = movieData.getmUserRating();
         String releaseDate = movieData.getmReleaseDate();
 
-        intent.putExtra(MOVIE_DETAILS_ID, movieId);
-        intent.putExtra(MOVIE_DETAILS_DATE, releaseDate);
-        intent.putExtra(MOVIE_DETAILS_PLOT, plotString);
-        intent.putExtra(MOVIE_DETAILS_RATING, userRating);
-        intent.putExtra(MOVIE_DETAILS_TITLE, titleString);
-        intent.putExtra(MOVIE_DETAILS_URI, uriString);
+        intent.putExtra(MOVIE_DB_OBJECT,movieData);
 
         startActivity(intent);
     }
