@@ -4,9 +4,14 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.android.popularmovies.data.MovieDbObject;
+import com.example.android.popularmovies.data.MoviesContract;
 import com.example.android.popularmovies.data.MoviesProvider;
 import com.example.android.popularmovies.utils.HttpRequestManager;
 import com.example.android.popularmovies.utils.TheMovieDBDataResponseManager;
@@ -30,7 +36,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements GridRecyclerViewAdapter.ItemClickListener, PrefferedDataLoadedListener {
+public class MainActivity extends AppCompatActivity implements  GridRecyclerViewAdapter.ItemClickListener,
+                                                                PrefferedDataLoadedListener,
+                                                                LoaderManager.LoaderCallbacks<Cursor> {
 
     public enum ESortPreference{
         E_TOP_RATED_MOVIE,
@@ -41,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
 
     public static final String      SORT_MOVIE_PREFERENCE   = "SortMoviePreference";
     public static final String      MOVIE_DB_OBJECT         = "MOVIE_DB_OBJECT";
+    private static final int        ID_MOVIE_LOADER         = 10001;
+
 
     ProgressBar                     mProgressBar;
     SharedPreferences               mSharedPrefs;
@@ -48,8 +58,8 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
     RecyclerView                    mRecyclerView;
     GridRecyclerViewAdapter         mGridAdapter;
     HttpRequestManager              mHttpRequestManager;
-    MoviesProvider                  mMoviesProvider;
     Map<Long,MovieDbObject>         mMovieDetailsByIdMap;
+    Cursor                          mCurrentCursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
         setContentView(R.layout.activity_main);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
 
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mMovieDetailsByIdMap = new HashMap<Long,MovieDbObject>();
@@ -72,8 +84,6 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_grid_images);
 
         mGeneralToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-
-        mMoviesProvider = new MoviesProvider();
 
         fetchMovieData();
     }
@@ -91,26 +101,24 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
             case R.id.top:
                 mSharedPrefs.edit().putInt(SORT_MOVIE_PREFERENCE,ESortPreference.E_TOP_RATED_MOVIE.ordinal()).commit();
                 mGeneralToast.setText(getResources().getString(R.string.top_rated));
-                mGeneralToast.setDuration(Toast.LENGTH_SHORT);
-                mGeneralToast.show();
-                fetchMovieData();
-                return true;
+                break;
             case R.id.most:
                 mSharedPrefs.edit().putInt(SORT_MOVIE_PREFERENCE,ESortPreference.E_MOST_POPULAR_MOVIE.ordinal()).commit();
                 mGeneralToast.setText(getResources().getString(R.string.most_popular));
-                mGeneralToast.setDuration(Toast.LENGTH_SHORT);
-                mGeneralToast.show();
-                fetchMovieData();
+                break;
             case R.id.fav:
                 mSharedPrefs.edit().putInt(SORT_MOVIE_PREFERENCE,ESortPreference.E_FAVOURITE_MOVIE.ordinal()).commit();
                 mGeneralToast.setText(getResources().getString(R.string.favourite));
-                mGeneralToast.setDuration(Toast.LENGTH_SHORT);
-                mGeneralToast.show();
-                fetchMovieData();
-                return true;
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+
+        mGeneralToast.setDuration(Toast.LENGTH_SHORT);
+        mGeneralToast.show();
+        fetchMovieData();
+
+        return true;
     }
 
     @Override
@@ -118,11 +126,6 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
         Intent intent = new Intent(this, MovieDetailsActivity.class);
         long movieId = mGridAdapter.getMovieId(position);
         MovieDbObject movieData = mMovieDetailsByIdMap.get(movieId);
-        String uriString = movieData.getmUriImageString();
-        String plotString = movieData.getmPlot();
-        String titleString = movieData.getmTitle();
-        double userRating = movieData.getmUserRating();
-        String releaseDate = movieData.getmReleaseDate();
 
         intent.putExtra(MOVIE_DB_OBJECT,movieData);
 
@@ -227,7 +230,64 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
         mRecyclerView.setAdapter(mGridAdapter);
     }
 
-    @Override
+
+    public void onRefreshViewByFavouriteDbData() {
+        Map<Long,String> dataMap = new HashMap<Long,String>();
+        int numberOfColumns = 2;
+
+        if (null == mCurrentCursor){
+            mGeneralToast.setText(R.string.network_error);
+            mGeneralToast.setDuration(Toast.LENGTH_LONG);
+            mGeneralToast.show();
+            stopProgressBar();
+            return;
+        }
+
+        for (int index = 0; index < mCurrentCursor.getCount(); index++){
+            Long id = Long.valueOf(0);
+            String uriString;
+            String plotString = null;
+            String titleString = null;
+            float userRating = 0;
+            String releaseDate = null;
+
+
+            long    mMovieId;
+            String  mUriImageString;
+            String  mTitle;
+            String  mPlot;
+            float  mUserRating;
+            String  mReleaseDate;
+
+            id = mCurrentCursor.getLong();
+            uriString = TheMovieDBDataResponseManager.getUriFromTheMovieDbJson(jsonObj);
+            plotString = TheMovieDBDataResponseManager.getPlotFromTheMovieDbJson(jsonObj);
+            releaseDate = TheMovieDBDataResponseManager.getReleaseDateFromTheMovieDbJson(jsonObj);
+            titleString = TheMovieDBDataResponseManager.getTitleFromTheMovieDbJson(jsonObj);
+            userRating = (float) TheMovieDBDataResponseManager.getUserRatingFromTheMovieDbJson(jsonObj);
+
+            MovieDbObject movieData = new MovieDbObject();
+            movieData.setmMovieId(id);
+            movieData.setmPlot(plotString);
+            movieData.setmReleaseDate(releaseDate);
+            movieData.setmTitle(titleString);
+            movieData.setmUriImageString(uriString);
+            movieData.setmUserRating(userRating);
+
+            dataMap.put(id,uriString);
+            mMovieDetailsByIdMap.put(id,movieData);
+        }
+
+        stopProgressBar();
+
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        mGridAdapter = new GridRecyclerViewAdapter(this, dataMap);
+        mGridAdapter.setClickListener(this);
+        mRecyclerView.setAdapter(mGridAdapter);
+    }
+
+
+        @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putInt(SORT_MOVIE_PREFERENCE, mSharedPrefs.getInt(SORT_MOVIE_PREFERENCE,0));
@@ -237,6 +297,31 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mSharedPrefs.edit().putInt(SORT_MOVIE_PREFERENCE,savedInstanceState.getInt(SORT_MOVIE_PREFERENCE));
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+
+            case ID_MOVIE_LOADER:
+                Uri forecastQueryUri = MoviesContract.MovieEntry.CONTENT_URI;
+                String sortOrder = MoviesContract.MovieEntry.COLUMN_DATE + " ASC";
+
+                return new CursorLoader(this, forecastQueryUri, null, null, null, sortOrder);
+
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + id);
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mCurrentCursor = data;
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // no need for reset
     }
 
     private void fetchMovieData(){
@@ -256,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
                 break;
             }
             case 2:{
-                //mMoviesProvider.query();
+
                 break;
             }
             default:{

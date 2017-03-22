@@ -7,10 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by home on 2/4/2017.
- */
-
 public class TheMovieDBDataResponseManager {
 
     private static final String TMDB_RESULTS_KEY        = "results";
