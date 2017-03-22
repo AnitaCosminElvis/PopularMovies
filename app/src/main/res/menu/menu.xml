@@ -3,16 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/top"
-        android:icon="@android:drawable/btn_star_big_on"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="@string/top_rated"
-        app:showAsAction="ifRoom" >
+        app:showAsAction="always" >
     </item>
     <item
         android:id="@+id/most"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:icon="@android:drawable/ic_menu_view"
         android:title="@string/most_popular"
-        app:showAsAction="ifRoom" >
+        app:showAsAction="always" >
     </item>
-
+    <item
+        android:id="@+id/fav"
+        android:icon="@android:drawable/star_big_on"
+        android:title="@string/favourite"
+        app:showAsAction="always" >
+    </item>
 
 </menu>

@@ -1,118 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_movie_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.popularmovies.MovieDetailsActivity">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:id="@+id/tv_movie_title"
                 android:layout_alignParentTop="true"
                 android:textSize="@dimen/title_size"
-                android:background="@color/cardview_dark_background"
+                android:background="@color/colorPrimaryDark"
                 android:gravity="center"
-                android:layout_height="@dimen/movie_title_vertical_margin"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="16dp" />
 
-            <LinearLayout
-                android:id="@+id/linearLayout3"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_below="@+id/tv_movie_title"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_height="@dimen/body_height"
-                android:background="@color/cardview_shadow_start_color"
-                android:paddingRight="@dimen/padding_size"
-                android:paddingLeft="@dimen/padding_size"
-                android:paddingTop="@dimen/padding_size"
-                android:paddingBottom="@dimen/zero_size">
+            <!--<LinearLayout-->
+                <!--android:id="@+id/linearLayout3"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_below="@+id/tv_movie_title"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_height="@dimen/body_height"-->
+                <!--android:background="@color/cardview_shadow_start_color"-->
+                <!--android:paddingRight="@dimen/padding_size"-->
+                <!--android:paddingLeft="@dimen/padding_size"-->
+                <!--android:paddingTop="@dimen/padding_size"-->
+                <!--android:paddingBottom="@dimen/zero_size">-->
 
                 <ImageView
                     android:id="@+id/iv_movie_poster"
-                    android:layout_width="@dimen/image_width"
-                    android:layout_height="match_parent"
+                    android:layout_width="166dp"
+                    android:layout_height="250dp"
                     android:scaleType="fitXY"
-                    android:background="@color/cardview_shadow_start_color"/>
+                    android:background="@color/colorPrimary"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginLeft="16dp" />
 
-                <LinearLayout
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_gravity="bottom|right"
-                    android:layout_toEndOf="@id/iv_movie_poster"
-                    android:layout_toRightOf="@id/iv_movie_poster"
-                    android:layout_width="match_parent"
-                    android:weightSum="1"
-                    android:background="@color/cardview_shadow_start_color">
+                <!--<LinearLayout-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:orientation="vertical"-->
+                    <!--android:layout_gravity="bottom|right"-->
+                    <!--android:layout_toEndOf="@id/iv_movie_poster"-->
+                    <!--android:layout_toRightOf="@id/iv_movie_poster"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:weightSum="1"-->
+                    <!--android:background="@color/cardview_shadow_start_color">-->
 
                     <TextView
-                        android:id="@+id/tv_rating"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tv_release_date_1"
+                        android:text="@string/releaseDate"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|bottom"
                         android:layout_weight="0.5"
                         android:textSize="@dimen/text_size"
-                        android:textAlignment="center"/>
+                        android:textAlignment="center"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintLeft_toRightOf="@+id/iv_movie_poster"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_movie_title" />
 
                     <TextView
-                        android:id="@+id/tv_release_date"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tv_release_date_2"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        tools:text="@string/app_name"
+                        android:layout_gravity="center|bottom"
                         android:layout_weight="0.5"
                         android:textAlignment="center"
-                        android:textSize="@dimen/text_size"/>
-                </LinearLayout>
-            </LinearLayout>
+                        android:textSize="@dimen/text_size"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintLeft_toRightOf="@+id/iv_movie_poster"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_release_date_1" />
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@+id/linearLayout3"
-                android:layout_height="match_parent"
-                android:background="@color/cardview_shadow_start_color"
-                android:padding="@dimen/padding_size">
+    <RatingBar
+        android:id="@+id/ratingBar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="82dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="28dp"
+        android:clickable="false"
+        android:isScrollContainer="false"
+        android:numStars="5"
+        android:rating="0"
+        android:stepSize="0.1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/iv_movie_poster"
+        app:layout_constraintRight_toRightOf="@+id/imageButton"
+        app:layout_constraintTop_toBottomOf="@+id/tv_release_date_2" />
 
-                <TextView
-                    android:id="@+id/tv_plot"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size"
-                    android:background="@color/cardview_shadow_start_color"
-                    android:layout_alignParentBottom="false"
-                    android:layout_gravity="fill" />
-            </ScrollView>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#000000" >
-            </View>
-            <TextView
-                android:id="@+id/tv_trailers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size"
-                android:text="@string/trailers"
-                android:background="@color/cardview_shadow_start_color"
-                android:layout_alignParentBottom="false"
-                android:layout_gravity="fill" />
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/lv_trailers"
-                android:orientation="vertical">
-            </ListView>
-        </LinearLayout>
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="96dp"
+        android:background="@android:color/background_light"
+        app:layout_constraintLeft_toRightOf="@+id/iv_movie_poster"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar"
+        app:srcCompat="@android:drawable/btn_star_big_off" />
+
+    <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
+
+    <View
+        android:id="@+id/vw_line"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:background="#000000"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/colorPrimary"
+        android:padding="@dimen/padding_size"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/vw_line">
+
+        <TextView
+            android:id="@+id/tv_plot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:layout_gravity="fill"
+            android:background="@color/colorPrimary"
+            android:textSize="@dimen/text_size" />
     </ScrollView>
-</RelativeLayout>
+
+    <!--<ListView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/lv_trailers"-->
+                <!--android:orientation="vertical">-->
+            <!--</ListView>-->
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
+</android.support.constraint.ConstraintLayout>

@@ -9,7 +9,7 @@ public class MovieDbObject implements Parcelable {
     String  mUriImageString;
     String  mTitle;
     String  mPlot;
-    double  mUserRating;
+    float  mUserRating;
     String  mReleaseDate;
 
     public long getmMovieId() {
@@ -28,7 +28,7 @@ public class MovieDbObject implements Parcelable {
         return mPlot;
     }
 
-    public double getmUserRating() {
+    public float getmUserRating() {
         return mUserRating;
     }
 
@@ -52,7 +52,7 @@ public class MovieDbObject implements Parcelable {
         this.mPlot = mPlot;
     }
 
-    public void setmUserRating(double mUserRating) {
+    public void setmUserRating(float mUserRating) {
         this.mUserRating = mUserRating;
     }
 
@@ -73,7 +73,7 @@ public class MovieDbObject implements Parcelable {
         this.mPlot = data[2];
         this.mReleaseDate = data[3];
         this.mMovieId = in.readLong();
-        this.mUserRating = in.readDouble();
+        this.mUserRating = in.readFloat();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class MovieDbObject implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[] {this.mUriImageString, this.mTitle, this.mPlot, this.mReleaseDate});
         dest.writeLong(this.mMovieId);
-        dest.writeDouble(this.mUserRating);
+        dest.writeFloat(this.mUserRating);
     }
 
     @SuppressWarnings("unused")

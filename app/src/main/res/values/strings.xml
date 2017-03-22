@@ -4,9 +4,10 @@
     <string name="pref_summary">Choose Your Movie Filter Preference</string>
     <string name="top_rated">Top Rated Movies</string>
     <string name="most_popular">Popular Movies</string>
+    <string name="favourite">Favourite Movies</string>
     <string name="network_error">There was an internet error ! Please select your preference or verify your internet connection.</string>
     <string name="movie_pref_key">movie_preferences</string>
     <string name="rating">Rating : %1$s/10 </string>
-    <string name="releaseDate">Release Date : %1$s </string>
+    <string name="releaseDate">Release Date :</string>
     <string name="trailers">Trailers : </string>
 </resources>

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.android.popularmovies.data.MovieDbObject;
@@ -21,7 +22,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     TextView        mTitle;
     TextView        mPlot;
-    TextView        mRating;
+    RatingBar       mRating;
     TextView        mReleaseDate;
     ImageView       mMoviePoster;
     MovieDbObject   mMovieDbObject;
@@ -35,9 +36,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         mTitle = (TextView) findViewById(R.id.tv_movie_title);
         mPlot = (TextView) findViewById(R.id.tv_plot);
-        mRating = (TextView) findViewById(R.id.tv_rating);
-        mReleaseDate = (TextView) findViewById(R.id.tv_release_date);
+        mRating = (RatingBar) findViewById(R.id.ratingBar);
+        mReleaseDate = (TextView) findViewById(R.id.tv_release_date_2);
         mMoviePoster = (ImageView) findViewById(R.id.iv_movie_poster);
+
 
         Intent intent = getIntent();
         mMovieDbObject = intent.getParcelableExtra(MainActivity.MOVIE_DB_OBJECT);
@@ -47,14 +49,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         mTitle.setText(mMovieDbObject.getmTitle());
         mPlot.setText(mMovieDbObject.getmPlot());
+        mRating.setMax(5);
+        mRating.setNumStars(5);
+        mRating.setStepSize(0.1f);
+        mRating.setRating(mMovieDbObject.getmUserRating()/2f);
+        mRating.setFocusableInTouchMode(false);
+        mRating.setClickable(false);
+        mRating.setIsIndicator(true);
 
-        String strRatingFormat = String.format(getResources().getString(R.string.rating),
-                String.valueOf(mMovieDbObject.getmUserRating()));
-        mRating.setText(String.valueOf(strRatingFormat));
-
-        String strRelDateFormat = String.format(getResources().getString(R.string.releaseDate),
-                mMovieDbObject.getmReleaseDate());
-        mReleaseDate.setText(strRelDateFormat);
+        mReleaseDate.setText(mMovieDbObject.getmReleaseDate());
 
         Picasso.with(context).load(uri).into(mMoviePoster);
     }

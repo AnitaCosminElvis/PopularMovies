@@ -5,11 +5,11 @@
     <dimen name="movie_title_vertical_margin">100dp</dimen>
     <dimen name="movie_body_vertical_margin">200dp</dimen>
     <dimen name="movie_details_horizontal_margin">200dp</dimen>
-    <dimen name="text_size">20sp</dimen>
+    <dimen name="text_size">18sp</dimen>
     <dimen name="padding_size">16dp</dimen>
     <dimen name="zero_size">0dp</dimen>
     <dimen name="std_margin_size">20dp</dimen>
-    <dimen name="title_size">22dp</dimen>
+    <dimen name="title_size">22sp</dimen>
     <dimen name="body_height">250dp</dimen>
     <dimen name="image_width">166dp</dimen>
     <dimen name="scroll_height">120dp</dimen>
