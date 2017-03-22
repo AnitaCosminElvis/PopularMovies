@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements GridRecyclerViewA
 
         mGeneralToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
+        mMoviesProvider = new MoviesProvider();
+
         fetchMovieData();
     }
 
