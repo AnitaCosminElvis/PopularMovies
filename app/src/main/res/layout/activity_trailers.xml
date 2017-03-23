@@ -2,14 +2,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:padding="8dp"
+    android:background="@color/colorPrimaryDark">
 
 
     <ListView
+        android:id="@+id/lv_trailers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginTop="@dimen/paddMin"
+        android:layout_marginBottom="@dimen/paddMin"
+        android:background="@color/colorPrimaryDark"
+        android:dividerHeight="20.0dp"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

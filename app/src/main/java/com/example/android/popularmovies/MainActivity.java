@@ -2,7 +2,6 @@ package com.example.android.popularmovies;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -33,7 +32,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.android.popularmovies.utils.HttpRequestManager.REQUEST_MOVIES;
-import static com.example.android.popularmovies.utils.HttpRequestManager.REQUEST_TRAILERS;
 
 public class MainActivity extends AppCompatActivity implements  GridRecyclerViewAdapter.ItemClickListener,
                                                                 PrefferedDataLoadedListener,
@@ -66,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mMovieDetailsByIdMap = new HashMap<Long,MovieDbObject>();
@@ -278,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
         int numberOfColumns = 2;
 
         if (null == mCurrentCursor){
+            stopProgressBar();
             return;
         }
 
@@ -342,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (null != data && 0 < data.getCount()) {
+        if (null != data){
             mCurrentCursor = data;
             if (2 == mSharedPrefs.getInt(SORT_MOVIE_PREFERENCE,0)){
                 fetchMovieData();
@@ -372,12 +371,12 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
         switch(nValue){
             case 0:{
                 mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_TOP_RATED_MOVIE, 0);
-                mHttpRequestManager.execute(REQUEST_MOVIES);
+                mHttpRequestManager.execute(Integer.valueOf(REQUEST_MOVIES));
                 break;
             }
             case 1:{
                 mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_MOST_POPULAR_MOVIE, 0);
-                mHttpRequestManager.execute(REQUEST_MOVIES);
+                mHttpRequestManager.execute(Integer.valueOf(REQUEST_MOVIES));
                 break;
             }
             case 2:{
@@ -386,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
             }
             default:{
                 mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_TOP_RATED_MOVIE, 0);
-                mHttpRequestManager.execute(REQUEST_MOVIES);
+                mHttpRequestManager.execute(Integer.valueOf(REQUEST_MOVIES));
                 break;
             }
         }

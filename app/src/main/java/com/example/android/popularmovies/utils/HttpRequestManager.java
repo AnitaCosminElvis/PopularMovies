@@ -33,7 +33,7 @@ public final class HttpRequestManager extends AsyncTask<Integer, Void, JSONArray
     private static final String     REVIEWS_PATH = "/reviews?api_key=";
 
 
-    private static final String     API_KEY = "dummyKey";
+    private static final String     API_KEY = "dummyApiKey";
 
     public static final int         REQUEST_MOVIES      = 0;
     public static final int         REQUEST_TRAILERS    = 1;
@@ -42,7 +42,7 @@ public final class HttpRequestManager extends AsyncTask<Integer, Void, JSONArray
     MainActivity.ESortPreference    mSortPreference;
     PrefferedDataLoadedListener     mListener;
     long                            mMovieId;
-    int                             mRequestType;
+    Integer                         mRequestType;
 
     public HttpRequestManager(PrefferedDataLoadedListener listener,
                               MainActivity.ESortPreference eSortPreference,
@@ -75,12 +75,15 @@ public final class HttpRequestManager extends AsyncTask<Integer, Void, JSONArray
                     default:
                         break;
                 }
+                break;
             }
             case REQUEST_TRAILERS: {
                 urlString = BASE_MOVIES_URL + String.valueOf(mMovieId) + VIDEOS_PATH + API_KEY;
+                break;
             }
             case REQUEST_REVIEWS: {
                 urlString = BASE_MOVIES_URL + String.valueOf(mMovieId) + REVIEWS_PATH + API_KEY;
+                break;
             }
         }
 
@@ -182,12 +185,15 @@ public final class HttpRequestManager extends AsyncTask<Integer, Void, JSONArray
         switch (mRequestType) {
             case REQUEST_MOVIES: {
                 mListener.onPrefferedDataWasFetched(data);
+                break;
             }
             case REQUEST_TRAILERS: {
                 mListener.onTrailersDataWasFetched(data);
+                break;
             }
             case REQUEST_REVIEWS: {
                 mListener.onReviewsDataWasFetched(data);
+                break;
             }
         }
     }

@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.popularmovies.data.MovieDbObject;
 import com.example.android.popularmovies.data.MoviesContract;
@@ -28,10 +26,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.android.popularmovies.utils.HttpRequestManager.REQUEST_MOVIES;
 import static com.example.android.popularmovies.utils.HttpRequestManager.REQUEST_REVIEWS;
 import static com.example.android.popularmovies.utils.HttpRequestManager.REQUEST_TRAILERS;
 
@@ -58,7 +56,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        mReviewsByIdMap = new HashMap<String, ReviewDbObject>();
+        mTrailersByIdMap = new HashMap<String,TrailerDbObject>();
 
         mTitle = (TextView) findViewById(R.id.tv_movie_title);
         mPlot = (TextView) findViewById(R.id.tv_plot);
@@ -71,9 +72,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
         mMovieDbObject = intent.getParcelableExtra(MainActivity.MOVIE_DB_OBJECT);
 
         mTrailersRequestsManager = new HttpRequestManager(this, MainActivity.ESortPreference.E_UNKNOWN_SORT_TYPE , mMovieDbObject.getmMovieId());
-        mTrailersRequestsManager.execute(REQUEST_TRAILERS);
+        mTrailersRequestsManager.execute(Integer.valueOf(REQUEST_TRAILERS));
         mReviewsRequestManager = new HttpRequestManager(this, MainActivity.ESortPreference.E_UNKNOWN_SORT_TYPE, mMovieDbObject.getmMovieId());
-        mReviewsRequestManager.execute(REQUEST_REVIEWS);
+        mReviewsRequestManager.execute(Integer.valueOf(REQUEST_REVIEWS));
 
         Uri uri = Uri.parse(BASE_IMAGE_URL_184 + mMovieDbObject.getmUriImageString());
         Context context = this.getApplicationContext();
@@ -137,18 +138,21 @@ public class MovieDetailsActivity extends AppCompatActivity implements View.OnCl
                     mMarkAsFavouriteBtn.setBackgroundResource(drawable.star_big_off);
                     mMovieDbObject.setIsFavorite(false);
                 }
+                break;
             }
             case R.id.ib_trailers:{
                 Intent intent = new Intent(this, TrailersActivity.class);
-                TrailerDbObject trailerObj = mTrailersByIdMap.get(String.valueOf(mMovieDbObject.getmMovieId()));
-                intent.putExtra(TRAILER_DB_OBJECT,trailerObj);
+                ArrayList<TrailerDbObject> trailerObjs = new ArrayList<TrailerDbObject>(mTrailersByIdMap.values());
+                intent.putParcelableArrayListExtra(TRAILER_DB_OBJECT,trailerObjs);
                 startActivity(intent);
+                break;
             }
             case R.id.ib_reviews:{
                 Intent intent = new Intent(this, ReviewsActivity.class);
-                ReviewDbObject reviewObj = mReviewsByIdMap.get(String.valueOf(mMovieDbObject.getmMovieId()));
-                intent.putExtra(REVIEW_DB_OBJECT,reviewObj);
+                ArrayList<ReviewDbObject> reviewObjs = new ArrayList<ReviewDbObject>(mReviewsByIdMap.values());
+                intent.putParcelableArrayListExtra(REVIEW_DB_OBJECT,reviewObjs);
                 startActivity(intent);
+                break;
             }
         }
     }

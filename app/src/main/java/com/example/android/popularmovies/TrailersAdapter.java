@@ -7,16 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.example.android.popularmovies.data.ReviewDbObject;
-
 import java.util.ArrayList;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import com.example.android.popularmovies.data.ReviewDbObject;
 import com.example.android.popularmovies.data.TrailerDbObject;
 
 
@@ -39,5 +30,15 @@ public class TrailersAdapter extends ArrayAdapter<TrailerDbObject> {
         tvName.setText(trailer.getmName());
 
         return convertView;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return Long.valueOf(position);
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
     }
 }

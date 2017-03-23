@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryDark">
+        <TextView
+            android:id="@+id/tv_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="@dimen/title_size"
+            android:background="@color/colorPrimaryLight"
+            android:layout_margin="@dimen/paddMin"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/padding_size"
+            android:layout_marginLeft="@dimen/padding_size"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="@dimen/padding_size"
+            app:layout_constraintRight_toRightOf="parent">
+        </TextView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryLight"
+            android:textAlignment="gravity"
+            android:layout_alignTop="@+id/tv_author"
+            android:layout_alignStart="@+id/tv_author"
+            android:layout_marginTop="@dimen/padding_size"
+            app:layout_constraintTop_toBottomOf="@+id/tv_author"
+            android:layout_marginLeft="@dimen/padding_size"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="@dimen/padding_size"
+            app:layout_constraintRight_toRightOf="parent">
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="@dimen/text_size"
+                android:textAlignment="gravity"
+                android:background="@color/colorPrimaryLight">
+            </TextView>
+        </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
