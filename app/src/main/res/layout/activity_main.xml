@@ -5,10 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.popularmovies.MainActivity"
-    android:background="@color/cardview_dark_background"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
-
-
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_grid_images"

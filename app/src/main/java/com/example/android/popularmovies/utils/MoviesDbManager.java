@@ -71,7 +71,6 @@ public class MoviesDbManager  extends AsyncTaskLoader<Cursor> {
     @Override
     public void deliverResult(Cursor cursor) {
         if (isReset()) {
-            // An async query came in while the loader is stopped
             if (cursor != null) {
                 cursor.close();
             }

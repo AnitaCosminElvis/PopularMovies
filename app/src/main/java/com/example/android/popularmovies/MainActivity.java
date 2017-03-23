@@ -1,12 +1,9 @@
 package com.example.android.popularmovies;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
@@ -25,7 +22,6 @@ import android.widget.Toast;
 
 import com.example.android.popularmovies.data.MovieDbObject;
 import com.example.android.popularmovies.data.MoviesContract;
-import com.example.android.popularmovies.data.MoviesProvider;
 import com.example.android.popularmovies.utils.HttpRequestManager;
 import com.example.android.popularmovies.utils.TheMovieDBDataResponseManager;
 
@@ -63,12 +59,11 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this);
 
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mMovieDetailsByIdMap = new HashMap<Long,MovieDbObject>();
@@ -86,6 +81,28 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
         mGeneralToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
         fetchMovieData();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getSupportLoaderManager().restartLoader(ID_MOVIE_LOADER, null, this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -147,13 +164,14 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
 
         for (int index = 0; index < data.length(); index++){
             JSONObject jsonObj = null;
-            String jSonString = null;
-            Long id = Long.valueOf(0);
+            String jSonString ;
+            Long id ;
             String uriString;
-            String plotString = null;
-            String titleString = null;
-            float userRating = 0;
-            String releaseDate = null;
+            String plotString ;
+            String titleString ;
+            float userRating ;
+            String releaseDate ;
+            boolean bIsFavorite = false;
 
             try {
                 jSonString = data.getString(index);
@@ -216,6 +234,18 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
                 movieData.setmTitle(titleString);
                 movieData.setmUriImageString(uriString);
                 movieData.setmUserRating(userRating);
+                movieData.setType(mSharedPrefs.getInt(SORT_MOVIE_PREFERENCE,0));
+
+                if (null != mCurrentCursor && 0 < mCurrentCursor.getCount()) {
+                    for(mCurrentCursor.moveToFirst(); !mCurrentCursor.isAfterLast(); mCurrentCursor.moveToNext()) {
+                        if (mCurrentCursor.getString(MoviesContract.MovieEntry.INDEX_MOVIE_ID).equals(String.valueOf(id))) {
+                            bIsFavorite = true;
+                            break;
+                        }
+                    }
+                }
+
+                movieData.setIsFavorite(bIsFavorite);
 
                 dataMap.put(id,uriString);
                 mMovieDetailsByIdMap.put(id,movieData);
@@ -230,52 +260,35 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
         mRecyclerView.setAdapter(mGridAdapter);
     }
 
-
     public void onRefreshViewByFavouriteDbData() {
         Map<Long,String> dataMap = new HashMap<Long,String>();
         int numberOfColumns = 2;
 
         if (null == mCurrentCursor){
-            mGeneralToast.setText(R.string.network_error);
+            return;
+        }
+
+        if (0 >= mCurrentCursor.getCount()){
+            mGeneralToast.setText(R.string.empty_favorites);
             mGeneralToast.setDuration(Toast.LENGTH_LONG);
             mGeneralToast.show();
             stopProgressBar();
             return;
         }
 
-        for (int index = 0; index < mCurrentCursor.getCount(); index++){
-            Long id = Long.valueOf(0);
-            String uriString;
-            String plotString = null;
-            String titleString = null;
-            float userRating = 0;
-            String releaseDate = null;
-
-
-            long    mMovieId;
-            String  mUriImageString;
-            String  mTitle;
-            String  mPlot;
-            float  mUserRating;
-            String  mReleaseDate;
-
-            id = mCurrentCursor.getLong();
-            uriString = TheMovieDBDataResponseManager.getUriFromTheMovieDbJson(jsonObj);
-            plotString = TheMovieDBDataResponseManager.getPlotFromTheMovieDbJson(jsonObj);
-            releaseDate = TheMovieDBDataResponseManager.getReleaseDateFromTheMovieDbJson(jsonObj);
-            titleString = TheMovieDBDataResponseManager.getTitleFromTheMovieDbJson(jsonObj);
-            userRating = (float) TheMovieDBDataResponseManager.getUserRatingFromTheMovieDbJson(jsonObj);
-
+        for(mCurrentCursor.moveToFirst(); !mCurrentCursor.isAfterLast(); mCurrentCursor.moveToNext()) {
             MovieDbObject movieData = new MovieDbObject();
-            movieData.setmMovieId(id);
-            movieData.setmPlot(plotString);
-            movieData.setmReleaseDate(releaseDate);
-            movieData.setmTitle(titleString);
-            movieData.setmUriImageString(uriString);
-            movieData.setmUserRating(userRating);
+            movieData.setmMovieId(mCurrentCursor.getLong(MoviesContract.MovieEntry.INDEX_MOVIE_ID));
+            movieData.setmPlot(mCurrentCursor.getString(MoviesContract.MovieEntry.INDEX_PLOT));
+            movieData.setmReleaseDate(mCurrentCursor.getString(MoviesContract.MovieEntry.INDEX_RELEASE_DATE));
+            movieData.setmTitle(mCurrentCursor.getString(MoviesContract.MovieEntry.INDEX_TITLE));
+            movieData.setmUriImageString(mCurrentCursor.getString(MoviesContract.MovieEntry.INDEX_URI_IMAGE));
+            movieData.setmUserRating(mCurrentCursor.getFloat(MoviesContract.MovieEntry.INDEX_RATING));
+            movieData.setType(mCurrentCursor.getType(MoviesContract.MovieEntry.INDEX_MOVIE_TYPE));
+            movieData.setIsFavorite(true);
 
-            dataMap.put(id,uriString);
-            mMovieDetailsByIdMap.put(id,movieData);
+            dataMap.put(movieData.getmMovieId(),movieData.getmUriImageString());
+            mMovieDetailsByIdMap.put(movieData.getmMovieId(),movieData);
         }
 
         stopProgressBar();
@@ -316,12 +329,19 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mCurrentCursor = data;
+        if (null != data && 0 < data.getCount()) {
+            mCurrentCursor = data;
+            if (2 == mSharedPrefs.getInt(SORT_MOVIE_PREFERENCE,0)){
+                fetchMovieData();
+            }
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // no need for reset
+        if (2 == mSharedPrefs.getInt(SORT_MOVIE_PREFERENCE,0)){
+            fetchMovieData();
+        }
     }
 
     private void fetchMovieData(){
@@ -329,27 +349,35 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
 
         if ((null != mRecyclerView) ){
             mRecyclerView.removeAllViewsInLayout();
+            mRecyclerView.setAdapter(null);
         }
 
-        switch(mSharedPrefs.getInt(SORT_MOVIE_PREFERENCE,0)){
+        mMovieDetailsByIdMap.clear();
+
+        int nValue = mSharedPrefs.getInt(SORT_MOVIE_PREFERENCE,0);
+
+        switch(nValue){
             case 0:{
                 mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_TOP_RATED_MOVIE);
+                mHttpRequestManager.execute();
                 break;
             }
             case 1:{
                 mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_MOST_POPULAR_MOVIE);
+                mHttpRequestManager.execute();
                 break;
             }
             case 2:{
-
+                onRefreshViewByFavouriteDbData();
                 break;
             }
             default:{
                 mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_TOP_RATED_MOVIE);
+                mHttpRequestManager.execute();
                 break;
             }
         }
-        mHttpRequestManager.execute();
+
     }
 
     private void startProgressBar(){

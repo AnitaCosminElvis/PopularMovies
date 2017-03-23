@@ -13,8 +13,6 @@ import android.support.annotation.NonNull;
 public class MoviesProvider  extends ContentProvider {
 
     public static final int CODE_MOVIE_FAVORITE     = 100;
-    public static final int CODE_MOVIE_POPULAR      = 200;
-    public static final int CODE_MOVIE_TOP_RATED    = 300;
 
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -29,8 +27,6 @@ public class MoviesProvider  extends ContentProvider {
         final String authority = MoviesContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, MoviesContract.PATH_MOVIE, CODE_MOVIE_FAVORITE);
-        matcher.addURI(authority, MoviesContract.PATH_MOVIE, CODE_MOVIE_POPULAR);
-        matcher.addURI(authority, MoviesContract.PATH_MOVIE, CODE_MOVIE_TOP_RATED);
 
         return matcher;
     }
@@ -58,9 +54,7 @@ public class MoviesProvider  extends ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
 
-            case CODE_MOVIE_FAVORITE:
-            case CODE_MOVIE_POPULAR:
-            case CODE_MOVIE_TOP_RATED: {
+            case CODE_MOVIE_FAVORITE: {
                 db.beginTransaction();
                 int rowsInserted = 0;
                 try {
@@ -105,14 +99,12 @@ public class MoviesProvider  extends ContentProvider {
         Cursor cursor;
 
         switch (sUriMatcher.match(uri)) {
-            case CODE_MOVIE_FAVORITE :
-            case CODE_MOVIE_POPULAR :
-            case CODE_MOVIE_TOP_RATED : {
+            case CODE_MOVIE_FAVORITE :{
                 cursor = mOpenHelper.getReadableDatabase().query(
                         MoviesContract.MovieEntry.TABLE_NAME,
-                        projection,
-                        MoviesContract.MovieEntry.COLUMN_MOVIE_TYPE + " = ? ",
-                        new String[]{String.valueOf(sUriMatcher.match(uri))},
+                        null,
+                        null,
+                        null,
                         null,
                         null,
                         sortOrder);
@@ -145,9 +137,7 @@ public class MoviesProvider  extends ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
 
-            case CODE_MOVIE_FAVORITE:
-            case CODE_MOVIE_POPULAR:
-            case CODE_MOVIE_TOP_RATED: {
+            case CODE_MOVIE_FAVORITE: {
                 numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
                         MoviesContract.MovieEntry.TABLE_NAME,
                         selection,
