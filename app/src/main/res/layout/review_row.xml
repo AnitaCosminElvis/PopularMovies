@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <?xml version="1.0" encoding="utf-8"?>
+
+        <TextView
+            android:id="@+id/tv_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:textColor="@color/cardview_shadow_start_color"
+            android:textSize="@dimen/title_size"
+            android:background="@color/colorPrimaryDark">
+        </TextView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/scroll_height"
+            android:background="@color/colorPrimary">
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:textColor="@color/cardview_shadow_start_color"
+                android:textSize="@dimen/title_size"
+                android:background="@color/colorPrimaryDark">
+            </TextView>
+        </ScrollView>
+
+</LinearLayout>

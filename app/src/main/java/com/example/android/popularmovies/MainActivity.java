@@ -32,6 +32,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.android.popularmovies.utils.HttpRequestManager.REQUEST_MOVIES;
+import static com.example.android.popularmovies.utils.HttpRequestManager.REQUEST_TRAILERS;
+
 public class MainActivity extends AppCompatActivity implements  GridRecyclerViewAdapter.ItemClickListener,
                                                                 PrefferedDataLoadedListener,
                                                                 LoaderManager.LoaderCallbacks<Cursor> {
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
     public enum ESortPreference{
         E_TOP_RATED_MOVIE,
         E_MOST_POPULAR_MOVIE,
-        E_FAVOURITE_MOVIE,
+        E_FAVORITE_MOVIE,
         E_UNKNOWN_SORT_TYPE
     }
 
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
                 mGeneralToast.setText(getResources().getString(R.string.most_popular));
                 break;
             case R.id.fav:
-                mSharedPrefs.edit().putInt(SORT_MOVIE_PREFERENCE,ESortPreference.E_FAVOURITE_MOVIE.ordinal()).commit();
+                mSharedPrefs.edit().putInt(SORT_MOVIE_PREFERENCE,ESortPreference.E_FAVORITE_MOVIE.ordinal()).commit();
                 mGeneralToast.setText(getResources().getString(R.string.favourite));
                 break;
             default:
@@ -260,6 +263,16 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
         mRecyclerView.setAdapter(mGridAdapter);
     }
 
+    @Override
+    public void onTrailersDataWasFetched(JSONArray data) {
+
+    }
+
+    @Override
+    public void onReviewsDataWasFetched(JSONArray data) {
+
+    }
+
     public void onRefreshViewByFavouriteDbData() {
         Map<Long,String> dataMap = new HashMap<Long,String>();
         int numberOfColumns = 2;
@@ -358,13 +371,13 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
 
         switch(nValue){
             case 0:{
-                mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_TOP_RATED_MOVIE);
-                mHttpRequestManager.execute();
+                mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_TOP_RATED_MOVIE, 0);
+                mHttpRequestManager.execute(REQUEST_MOVIES);
                 break;
             }
             case 1:{
-                mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_MOST_POPULAR_MOVIE);
-                mHttpRequestManager.execute();
+                mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_MOST_POPULAR_MOVIE, 0);
+                mHttpRequestManager.execute(REQUEST_MOVIES);
                 break;
             }
             case 2:{
@@ -372,8 +385,8 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
                 break;
             }
             default:{
-                mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_TOP_RATED_MOVIE);
-                mHttpRequestManager.execute();
+                mHttpRequestManager = new HttpRequestManager(MainActivity.this, ESortPreference.E_TOP_RATED_MOVIE, 0);
+                mHttpRequestManager.execute(REQUEST_MOVIES);
                 break;
             }
         }

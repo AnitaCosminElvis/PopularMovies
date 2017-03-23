@@ -3,8 +3,6 @@ package com.example.android.popularmovies.utils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,45 +20,68 @@ import com.example.android.popularmovies.MainActivity;
 import com.example.android.popularmovies.PrefferedDataLoadedListener;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 
-public final class HttpRequestManager extends AsyncTask<Void, Void, JSONArray> {
+public final class HttpRequestManager extends AsyncTask<Integer, Void, JSONArray> {
 
     private static final String     TAG = HttpRequestManager.class.getSimpleName();
 
+    private static final String     BASE_MOVIES_URL = "https://api.themoviedb.org/3/movie/";
     private static final String     BASE_POPULAR_MOVIES_URL = "https://api.themoviedb.org/3/movie/popular?api_key=";
     private static final String     BASE_TOP_MOVIES_URL = "https://api.themoviedb.org/3/movie/top_rated?api_key=";
-    private static final String     API_KEY = "85927cfcf1ec6f9e782b08839bca3248";
+    private static final String     VIDEOS_PATH = "/videos?api_key=";
+    private static final String     REVIEWS_PATH = "/reviews?api_key=";
+
+
+    private static final String     API_KEY = "dummyKey";
+
+    public static final int         REQUEST_MOVIES      = 0;
+    public static final int         REQUEST_TRAILERS    = 1;
+    public static final int         REQUEST_REVIEWS     = 2;
 
     MainActivity.ESortPreference    mSortPreference;
     PrefferedDataLoadedListener     mListener;
+    long                            mMovieId;
+    int                             mRequestType;
 
     public HttpRequestManager(PrefferedDataLoadedListener listener,
-                              MainActivity.ESortPreference eSortPreference) {
+                              MainActivity.ESortPreference eSortPreference,
+                              long nMovieId) {
         mSortPreference = eSortPreference;
         mListener = listener;
+        mMovieId = nMovieId;
     }
+
 
     public void setPreferenceType(MainActivity.ESortPreference eSortPreference){
         mSortPreference = eSortPreference;
     }
 
-    public URL createUrl() {
+    public URL createUrl(int nSelect) {
         Log.v(TAG, "Creating URI ...");
 
         String urlString = null;
 
-        switch (mSortPreference){
-            case E_MOST_POPULAR_MOVIE:
-                urlString = BASE_POPULAR_MOVIES_URL + API_KEY;
-                break;
-            case E_TOP_RATED_MOVIE:
-                urlString = BASE_TOP_MOVIES_URL + API_KEY;
-                break;
-            case E_UNKNOWN_SORT_TYPE:
-            default:
-                break;
+        switch ( nSelect ) {
+            case REQUEST_MOVIES: {
+                switch (mSortPreference) {
+                    case E_MOST_POPULAR_MOVIE:
+                        urlString = BASE_POPULAR_MOVIES_URL + API_KEY;
+                        break;
+                    case E_TOP_RATED_MOVIE:
+                        urlString = BASE_TOP_MOVIES_URL + API_KEY;
+                        break;
+                    case E_UNKNOWN_SORT_TYPE:
+                    default:
+                        break;
+                }
+            }
+            case REQUEST_TRAILERS: {
+                urlString = BASE_MOVIES_URL + String.valueOf(mMovieId) + VIDEOS_PATH + API_KEY;
+            }
+            case REQUEST_REVIEWS: {
+                urlString = BASE_MOVIES_URL + String.valueOf(mMovieId) + REVIEWS_PATH + API_KEY;
+            }
         }
 
         Uri builtUri = Uri.parse(urlString);
@@ -102,16 +123,51 @@ public final class HttpRequestManager extends AsyncTask<Void, Void, JSONArray> {
     }
 
     @Override
-    protected JSONArray doInBackground(Void... params) {
+    protected JSONArray doInBackground(Integer... params) {
         JSONArray data = null;
-        try {
-            String jsonResponse = requestDataFromHttpUrl(createUrl());
+        URL url = null;
 
-            data = TheMovieDBDataResponseManager.getTheMovieDbStringListFromJson(jsonResponse);
+        mRequestType = params[0];
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        switch (mRequestType) {
+            case REQUEST_MOVIES: {
+                try {
+                    url = createUrl(REQUEST_MOVIES);
+                    String jsonResponse = requestDataFromHttpUrl(url);
+
+                    data = TheMovieDBDataResponseManager.getTheMovieDbStringListFromJson(jsonResponse);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case REQUEST_TRAILERS: {
+                try {
+                    url = createUrl(REQUEST_TRAILERS);
+                    String jsonResponse = requestDataFromHttpUrl(url);
+
+                    data = TheMovieDBDataResponseManager.getTheTrailersDbStringListFromJson(jsonResponse);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+            case REQUEST_REVIEWS: {
+                try {
+                    url = createUrl(REQUEST_REVIEWS);
+                    String jsonResponse = requestDataFromHttpUrl(url);
+
+                    data = TheMovieDBDataResponseManager.getTheReviewsDbStringListFromJson(jsonResponse);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
         }
+
         return data;
     }
 
@@ -123,6 +179,16 @@ public final class HttpRequestManager extends AsyncTask<Void, Void, JSONArray> {
 
     @Override
     protected void onPostExecute(JSONArray data) {
-            mListener.onPrefferedDataWasFetched(data);
+        switch (mRequestType) {
+            case REQUEST_MOVIES: {
+                mListener.onPrefferedDataWasFetched(data);
+            }
+            case REQUEST_TRAILERS: {
+                mListener.onTrailersDataWasFetched(data);
+            }
+            case REQUEST_REVIEWS: {
+                mListener.onReviewsDataWasFetched(data);
+            }
+        }
     }
 }

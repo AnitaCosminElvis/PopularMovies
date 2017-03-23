@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="@dimen/progress_bar_size"
+    android:background="@color/colorPrimary"
+    android:weightSum="1">
+
+    <ImageButton
+        android:layout_width="@dimen/movie_title_vertical_margin"
+        android:layout_height="match_parent"
+        android:src="@android:drawable/ic_media_play"
+        />
+    <TextView
+        android:id="@+id/tv_trailer_name"
+        android:layout_width="250dp"
+        android:layout_height="@dimen/progress_bar_size"
+        android:layout_weight="0.09"
+        android:background="@color/colorPrimary" />
+
+</LinearLayout>
