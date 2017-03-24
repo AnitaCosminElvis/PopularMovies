@@ -95,8 +95,9 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
     protected void onPause() {
         super.onPause();
 
-        if (null != mRecyclerView && null != mRecyclerView.getLayoutManager())
+        if (null != mRecyclerView && null != mRecyclerView.getLayoutManager()) {
             mRecyclerViewState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        }
 
     }
 
@@ -274,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
         mGridAdapter = new GridRecyclerViewAdapter(this, dataMap);
         mGridAdapter.setClickListener(this);
         mRecyclerView.setAdapter(mGridAdapter);
+        mRecyclerView.getLayoutManager().onRestoreInstanceState(mRecyclerViewState);
     }
 
     @Override
@@ -324,30 +326,29 @@ public class MainActivity extends AppCompatActivity implements  GridRecyclerView
         mGridAdapter = new GridRecyclerViewAdapter(this, dataMap);
         mGridAdapter.setClickListener(this);
         mRecyclerView.setAdapter(mGridAdapter);
+        mRecyclerView.getLayoutManager().onRestoreInstanceState(mRecyclerViewState);
+
     }
 
 
         @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
 
-            if(null != mRecyclerView && null != mRecyclerView.getLayoutManager()){
-                mRecyclerViewState = mRecyclerView.getLayoutManager().onSaveInstanceState();
-            }
-
-            savedInstanceState.putInt(SORT_MOVIE_PREFERENCE, mSharedPrefs.getInt(SORT_MOVIE_PREFERENCE,0));
-            savedInstanceState.putParcelable(POSSITION_MOVIE_PREFERENCE,mRecyclerViewState);
-
-            super.onSaveInstanceState(savedInstanceState);
-
+        if(null != mRecyclerView && null != mRecyclerView.getLayoutManager()){
+            mRecyclerViewState = mRecyclerView.getLayoutManager().onSaveInstanceState();
         }
+
+        savedInstanceState.putInt(SORT_MOVIE_PREFERENCE, mSharedPrefs.getInt(SORT_MOVIE_PREFERENCE,0));
+        savedInstanceState.putParcelable(POSSITION_MOVIE_PREFERENCE,mRecyclerViewState);
+
+        super.onSaveInstanceState(savedInstanceState);
+
+    }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         if(savedInstanceState != null ){
             mRecyclerViewState = savedInstanceState.getParcelable(POSSITION_MOVIE_PREFERENCE);
-            if(mRecyclerView.getLayoutManager() != null){
-                mRecyclerView.getLayoutManager().onRestoreInstanceState(mRecyclerViewState);
-            }
         }
 
         mSharedPrefs.edit().putInt(SORT_MOVIE_PREFERENCE,savedInstanceState.getInt(SORT_MOVIE_PREFERENCE));
